@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reapware Wallet Pass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
+    header {
+      background: #000;
+      color: #fff;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    main {
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #000;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #walletBtn {
+      margin-top: 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>Reapware Wallet</header>
+  <main>
+    <form id="kbanForm">
+      <label for="kban">Enter your K/BAN</label>
+      <input type="text" id="kban" name="kban" placeholder="KBAN123456..." required />
+      <button type="submit">Generate Wallet Pass</button>
+    </form>
+    <div id="walletBtn"></div>
+  </main>
+
+  <script>
+    document.getElementById('kbanForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const kban = document.getElementById('kban').value;
+
+      const res = await fetch('/generate-pass', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kban })
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        document.getElementById('walletBtn').innerHTML = `
+          <a href="${data.url}">
+            <img src="https://developer.apple.com/apple-pay/marketing/images/add-to-apple-wallet.svg" height="55" />
+          </a>`;
+      } else {
+        document.getElementById('walletBtn').innerHTML = '<p style="color:red;">Failed to generate pass.</p>';
+      }
+    });
+  </script>
+</body>
+</html>
