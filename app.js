@@ -1,8 +1,10 @@
+const applePay = require('./routes/applePay');
 const express = require('express');
 const path = require('path');
 
 const app = express();
 
+app.use('/api/applepay', applePay);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
